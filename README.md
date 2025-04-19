@@ -5,8 +5,7 @@ This runtime represents the program as a lambda term; there is also [a runtime w
 
 Please see [the project webpage](https://www.skyshoesmith.com/projects/lambda-language).
 
-##
-Getting set up
+## Getting set up
 ### Stuff you'll need
 - [Alex](https://haskell-alex.readthedocs.io/en/latest/), a lexer generator for Haskell
 - [Happy](https://haskell-happy.readthedocs.io/en/latest/), a parser generator for Haskell

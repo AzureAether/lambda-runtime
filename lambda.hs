@@ -4,6 +4,7 @@ import Parser
 import Lexer
 import Data.Map (Map,(!))
 import qualified Data.Map as Map
+import System.IO
 
 -- ******************** Program -> Lambda ********************
 
@@ -60,6 +61,7 @@ bindVariable s indices = Map.insert s 1 (Map.map (+1) indices)
 main :: IO ()
 main = do
     putStr ">>> "
+    hFlush stdout
     fileName <- getLine
     program <- readFile $ fileName
     putStrLn $ unlines.map deBruijnString $ conv_to_lambda Map.empty ((parser.lexer) program)

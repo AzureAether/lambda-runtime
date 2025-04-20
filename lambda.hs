@@ -58,5 +58,5 @@ main = do
     putStr ">>> "
     fileName <- getLine
     program <- readFile $ fileName
-    putStrLn $ (deBruijnString.head) $ conv_to_lambda Map.empty ((parser.lexer) program)
+    putStrLn $ unlines.map deBruijnString $ conv_to_lambda Map.empty ((parser.lexer) program)
     Lambda.main

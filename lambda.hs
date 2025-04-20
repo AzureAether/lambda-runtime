@@ -31,9 +31,13 @@ conv_term l dict =
                                                                 Nothing  -> (Variable (Str v))
             (Variable (Num n))   -> Variable (Num n)
 
+-- convert an integer to a Church numeral
 num_to_lambda :: Int -> Lambda_term
-num_to_lambda 0 = Variable (Str "x")
-num_to_lambda n = Apply (Variable $ Str "f") (num_to_lambda $ n-1)
+num_to_lambda = Func ["f","x"] . num_to_grounded_church
+
+num_to_grounded_church :: Int -> Lambda_term
+num_to_grounded_church 0 = Variable (Str "x")
+num_to_grounded_church n = Apply (Variable $ Str "f") (num_to_lambda $ n-1)
 
 -- ******************** end Program -> Lambda ********************
 

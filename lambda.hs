@@ -47,7 +47,7 @@ deBruijnString :: Lambda_term -> String
 deBruijnString = deBruijnIndices Map.empty
 
 deBruijnIndices :: Map String Int -> Lambda_term -> String
-deBruijnIndices indices (Variable (Str s)) = if Map.member s indices then show (indices ! s) else s
+deBruijnIndices indices (Variable (Str s)) = if Map.member s indices then show (indices ! s) else "("++s++")"
 deBruijnIndices indices (Variable (Num n)) = deBruijnIndices indices $ num_to_lambda n
 deBruijnIndices indices (Apply t1 t2) = '+' : deBruijnIndices indices t1 ++ deBruijnIndices indices t2
 deBruijnIndices indices (Func [s] t) = '\\' : deBruijnIndices (bindVariable s indices) t

@@ -2,7 +2,7 @@ module Lambda where
 
 import Parser
 import Lexer
-import Data.Map (Map)
+import Data.Map (Map,(!))
 import qualified Data.Map as Map
 
 -- ******************** Program -> Lambda ********************
@@ -31,17 +31,32 @@ conv_term l dict =
                                                                 Nothing  -> (Variable (Str v))
             (Variable (Num n))   -> Variable (Num n)
 
-num_to_lambda :: Int -> Lambda
-num_to_lambda 0 = Var "x"
-num_to_lambda n = Ap (Var "f") (num_to_lambda $ n-1)
+num_to_lambda :: Int -> Lambda_term
+num_to_lambda 0 = Variable (Str "x")
+num_to_lambda n = Apply (Variable $ Str "f") (num_to_lambda $ n-1)
 
 -- ******************** end Program -> Lambda ********************
+
+-- Convert a lambda term with variables into one with de Bruijn
+-- indices, EG \xy.x -> \\1
+deBruijnString :: Lambda_term -> String
+deBruijnString = deBruijnIndices Map.empty
+
+deBruijnIndices :: Map String Int -> Lambda_term -> String
+deBruijnIndices indices (Variable (Str s)) = if Map.member s indices then show (indices ! s) else s
+deBruijnIndices indices (Variable (Num n)) = deBruijnIndices indices $ num_to_lambda n
+deBruijnIndices indices (Apply t1 t2) = '+' : deBruijnIndices indices t1 ++ deBruijnIndices indices t2
+deBruijnIndices indices (Func [s] t) = '\\' : deBruijnIndices (bindVariable s indices) t
+deBruijnIndices indices (Func (s:ss) t) = '\\' : deBruijnIndices indices' (Func ss t)
+    where indices' = (bindVariable s indices)
+
+bindVariable :: String -> Map String Int -> Map String Int
+bindVariable s indices = Map.insert s 1 (Map.map (+1) indices)
 
 main :: IO ()
 main = do
     putStr ">>> "
     fileName <- getLine
     program <- readFile $ fileName
-    print $ conv_to_lambda Map.empty ((parser.lexer) program)
-    putStrLn ""
+    putStrLn $ (deBruijnString.head) $ conv_to_lambda Map.empty ((parser.lexer) program)
     Lambda.main

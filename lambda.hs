@@ -42,6 +42,6 @@ main = do
     putStr ">>> "
     fileName <- getLine
     program <- readFile $ fileName
-    print $ (parser.lexer) program
+    print $ conv_to_lambda Map.empty ((parser.lexer) program)
     putStrLn ""
     Lambda.main

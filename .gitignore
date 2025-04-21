@@ -5,3 +5,7 @@ parser.hs
 program.txt
 program.sk
 program.lmd
+
+*.exe
+*.o
+*.hi

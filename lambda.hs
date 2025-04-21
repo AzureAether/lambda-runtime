@@ -60,9 +60,28 @@ bindVariable s indices = Map.insert s 1 (Map.map (+1) indices)
 
 main :: IO ()
 main = do
+    putStrLn "Welcome to the interactive lambda-runtime command line tool!"
+    putStrLn "To get started, try running the 'help' command."
+    mainloop
+
+mainloop :: IO ()
+mainloop = do
     putStr ">>> "
     hFlush stdout
-    fileName <- getLine
+    input <- getLine
+    case takeWhile (/=' ') input of
+        "help" -> runHelp
+        "show" -> runShow $ tail $ dropWhile (/=' ') input
+
+runHelp :: IO ()
+runHelp = do
+    putStrLn "help            - list all commands"
+    putStrLn "show [fileName] - show the de Bruijn forms of run terms in a lambda file"
+    putStrLn ""
+    mainloop
+
+runShow :: String -> IO ()
+runShow fileName = do
     program <- readFile $ fileName
     putStrLn $ unlines.map deBruijnString $ conv_to_lambda Map.empty ((parser.lexer) program)
-    Lambda.main
+    mainloop

@@ -18,3 +18,23 @@ alex lexer.x
 happy parser.y
 ghc -no-keep-hi-files -no-keep-o-files -main-is Lambda lambda.hs
 ```
+
+### Example use of the CLI (lambda.hs)
+```
+Welcome to the interactive lambda-runtime command line tool!
+To get started, try running the 'help' command.
+>>> help
+help                              - list all commands
+show [fileName]                   - show the de Bruijn forms of run terms in a lambda file
+compile [sourceFile] [targetFile] - store the result of show [sourceFile] at [targetFile]
+quit                              - exit the CLI
+
+>>> show program.txt
+++\\2\\+2\\1\\+2\\+2\\1
+
+>>> compile program.txt prog.lmd
+program.txt successfully compiled to prog.lmd
+
+>>> quit
+quitting...
+```

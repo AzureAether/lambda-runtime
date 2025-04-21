@@ -72,11 +72,14 @@ mainloop = do
     case takeWhile (/=' ') input of
         "help" -> runHelp
         "show" -> runShow $ tail $ dropWhile (/=' ') input
+        "quit" -> putStrLn "quitting...\n"
+        _ -> mainloop
 
 runHelp :: IO ()
 runHelp = do
     putStrLn "help            - list all commands"
     putStrLn "show [fileName] - show the de Bruijn forms of run terms in a lambda file"
+    putStrLn "quit            - exit the CLI"
     putStrLn ""
     mainloop
 

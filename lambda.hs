@@ -74,14 +74,16 @@ mainloop = do
     case takeWhile (/=' ') input of
         "help" -> runHelp
         "show" -> runShow $ tail $ dropWhile (/=' ') input
+        "compile" -> runCompile $ tail $ dropWhile (/=' ') input
         "quit" -> putStrLn "quitting...\n"
         _ -> mainloop
 
 runHelp :: IO ()
 runHelp = do
-    putStrLn "help            - list all commands"
-    putStrLn "show [fileName] - show the de Bruijn forms of run terms in a lambda file"
-    putStrLn "quit            - exit the CLI"
+    putStrLn "help                              - list all commands"
+    putStrLn "show [fileName]                   - show the de Bruijn forms of run terms in a lambda file"
+    putStrLn "compile [sourceFile] [targetFile] - store the result of show [sourceFile] at [targetFile]"
+    putStrLn "quit                              - exit the CLI"
     putStrLn ""
     mainloop
 
@@ -89,4 +91,20 @@ runShow :: String -> IO ()
 runShow fileName = do
     program <- readFile $ fileName
     putStrLn $ unlines.map deBruijnString $ conv_to_lambda Map.empty ((parser.lexer) program)
+    mainloop
+
+runCompile :: String -> IO ()
+runCompile args = do
+    let argList = words args
+    case length argList of
+        2 -> (head argList) `compileTo` (head $ tail argList)
+        _ -> putStrLn "usage: compile [sourceFile] [targetFile]" *> mainloop
+
+-- compile file, store at target location
+compileTo :: String -> String -> IO ()
+sourceFile `compileTo` targetFile = do
+    program <- readFile sourceFile
+    let compiledCode = unlines.map deBruijnString $ conv_to_lambda Map.empty ((parser.lexer) program)
+    writeFile targetFile compiledCode
+    putStrLn $ sourceFile ++ " successfully compiled to " ++ targetFile ++ "\n"
     mainloop

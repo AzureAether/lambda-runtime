@@ -58,6 +58,8 @@ deBruijnIndices indices (Func (s:ss) t) = '\\' : deBruijnIndices indices' (Func 
 bindVariable :: String -> Map String Int -> Map String Int
 bindVariable s indices = Map.insert s 1 (Map.map (+1) indices)
 
+-- main method (CLI for compiling lambda terms into de Bruijn form)
+
 main :: IO ()
 main = do
     putStrLn "Welcome to the interactive lambda-runtime command line tool!"

@@ -98,7 +98,7 @@ runCompile args = do
     let argList = words args
     case length argList of
         2 -> (head argList) `compileTo` (head $ tail argList)
-        _ -> putStrLn "usage: compile [sourceFile] [targetFile]" *> mainloop
+        _ -> putStrLn "usage: compile [sourceFile] [targetFile]\n" *> mainloop
 
 -- compile file, store at target location
 compileTo :: String -> String -> IO ()
